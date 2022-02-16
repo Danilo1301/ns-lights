@@ -30,3 +30,14 @@ void NSVehicles::CheckVehicles()
 		if (!found) { ListVehicleControllers.erase(p.first); }
 	}
 }
+
+void NSVehicles::Draw()
+{
+	for (std::pair<CVehicle*, NSVehicleController*> p : ListVehicleControllers)
+	{
+		auto vehController = p.second;
+
+		vehController->Draw();
+	}
+}
+

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "NS.h"
+
 #include "plugin.h"
 
 #include "NSConfig.h"
@@ -40,6 +42,32 @@ public:
 	}
 
 	bool firstReset = true;
+
+	void Draw() {
+
+		if (!NS::m_ShowDebug) return;
+
+		auto alarmState = vehicle->m_nAlarmState;
+		auto sirenAlarmFlag = vehicle->m_nVehicleFlags.bSirenOrAlarm;
+
+
+		CVector& posn = vehicle->GetPosition();
+		RwV3d rwp = { posn.x, posn.y, posn.z + 1.0f };
+		RwV3d screenCoors; float w, h;
+		if (CSprite::CalcScreenCoors(rwp, &screenCoors, &w, &h, true, true)) {
+			CFont::SetOrientation(ALIGN_CENTER);
+			CFont::SetColor(CRGBA(0, 255, 0, 255));
+			CFont::SetDropShadowPosition(1);
+			CFont::SetBackground(false, false);
+			CFont::SetWrapx(500.0);
+			CFont::SetScale(0.5, 1.0);
+			CFont::SetFontStyle(FONT_SUBTITLES);
+			CFont::SetProportional(true);
+			char text[256];
+			sprintf(text, "alarmState=%d sirenAlarmFlag=%d", alarmState, sirenAlarmFlag);
+			CFont::PrintString(screenCoors.x, screenCoors.y, text);
+		}
+	}
 
 	NSVechiclePatternController* GetPatternController(int lightn)
 	{
@@ -140,10 +168,15 @@ public:
 	{
 		if (!NSLights::LightDataExists(vehicle->m_nModelIndex)) { return; }
 
-		if (!NSMenu::isOpen && !(vehicle->m_nVehicleFlags.bSirenOrAlarm && vehicle->UsesSiren()))
-		{
-			return;
-		}
+		bool visible = true;
+
+		if (!vehicle->m_nVehicleFlags.bSirenOrAlarm) visible = false;
+
+		if (vehicle->m_nAlarmState != 0 && vehicle->m_nVehicleFlags.bSirenOrAlarm == 0) visible = false;
+
+		if (NSMenu::isOpen) visible = true;
+
+		if (!visible) return;
 
 		UpdatePatterns();
 
@@ -174,4 +207,5 @@ public:
 
 	static bool VehicleHasController(CVehicle* vehicle);
 	static void CheckVehicles();
+	static void Draw();
 };

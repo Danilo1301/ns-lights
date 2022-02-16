@@ -1,4 +1,5 @@
 #include "NSMenu.h"
+#include "NS.h"
 
 using namespace plugin;
 
@@ -18,7 +19,17 @@ int MAX_LIGHTS_PER_VEHICLE = 5;
 
 void NSMenu::ToggleMenu()
 {
+
+
 	if (!KeyPressed(17)) { return; }
+
+	if (KeyPressed(16)) {
+
+		NS::m_ShowDebug = !NS::m_ShowDebug;
+		CMessages::AddMessageJumpQ(NS::m_ShowDebug ? "Debug enabled" : "Debug disabled", 1000, 0, false);
+
+		return;
+	}
 
 	if (isOpen)
 	{
