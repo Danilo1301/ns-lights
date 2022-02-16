@@ -5,10 +5,6 @@ std::ifstream config_file;
 std::map<std::string, NSConfigItem*> NSConfig::ConfigItems;
 std::map<int, int> NSConfig::_models;
 
-void NSConfig::Init() {
-	NSConfig::LoadConfigs();
-}
-
 void NSConfig::LoadConfigs() {
 	ConfigItems.clear();
 

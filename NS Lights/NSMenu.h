@@ -31,14 +31,14 @@ public:
 	static void ToggleMenu();
 	static void Draw();
 	static void DeleteMenuItems();
-	static void SetMenuTitle(char* newTitle);
+	static void SetMenuTitle(const char* newTitle);
 	static NSMenuItem* NSMenu::GetMenuItemAt(int index);
 
-	static NSMenuItem* CreateMenuItemLabel(char* text);
-	static NSMenuItem* CreateMenuItemButton(char* text, std::function<void()> callback);
-	static NSMenuItem* CreateMenuItemOption(char* text, float displayWidth, int& store_to);
-	static NSMenuItem* CreateMenuItemFloat(char* text, float displayWidth, float min, float max, float& store_to);
-	static NSMenuItem* CreateMenuItemInt(char* text, float displayWidth, int min, int max, int& store_to);
+	static NSMenuItem* CreateMenuItemLabel(const char* text);
+	static NSMenuItem* CreateMenuItemButton(const char* text, std::function<void()> callback);
+	static NSMenuItem* CreateMenuItemOption(const char* text, float displayWidth, int& store_to);
+	static NSMenuItem* CreateMenuItemFloat(const char* text, float displayWidth, float min, float max, float& store_to);
+	static NSMenuItem* CreateMenuItemInt(const char* text, float displayWidth, int min, int max, int& store_to);
 
 	static void OnUpPressed();
 	static void OnDownPressed();

@@ -26,7 +26,6 @@ public:
 	static std::map<std::string, NSConfigItem*> ConfigItems;
 	static std::map<int, int> NSConfig::_models;
 
-	static void Init();
 	static void NSConfig::LoadConfigs();
 	static NSConfigItem* GetConfig(char* key);
 	static NSConfigItem* GetConfigForModel(int modelid, int lightn, char* key);

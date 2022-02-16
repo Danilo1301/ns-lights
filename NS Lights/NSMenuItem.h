@@ -45,7 +45,7 @@ public:
 		store_to_value = GetCurrentOptionInt();
 	}
 
-	void AddOption(int value, char* text)
+	void AddOption(int value, const char* text)
 	{
 		std::string option_display(text);
 		Options.push_back(std::pair<int, std::string>(value, option_display));
@@ -137,7 +137,7 @@ public:
 
 	std::list<std::array<int, 4>> ListColorDisplays;
 
-	NSMenuItem(eMenuItemType type, char* text, float displayWidth)
+	NSMenuItem(eMenuItemType type, const char* text, float displayWidth)
 	{
 		this->type = type;
 		sprintf(this->text, "%s", text);
@@ -165,7 +165,7 @@ public:
 		optionValueBinder = new OptionValueBinder(store_to);
 	}
 
-	void AddOption(int val, char* text) {
+	void AddOption(int val, const char* text) {
 		optionValueBinder->AddOption(val, text);
 	}
 

@@ -97,6 +97,7 @@
     <ClCompile Include="NSConfig.cpp" />
     <ClCompile Include="NSDraw.cpp" />
     <ClCompile Include="NSKeys.cpp" />
+    <ClCompile Include="NSLangConfig.cpp" />
     <ClCompile Include="NSLightData.cpp" />
     <ClCompile Include="NSMenu.cpp" />
     <ClCompile Include="NSMenuItem.cpp" />
@@ -111,6 +112,7 @@
     <ClInclude Include="NSDraw.h" />
     <ClInclude Include="NSKeys.h" />
     <ClInclude Include="NSLightData.h" />
+    <ClInclude Include="NSLangConfig.h" />
     <ClInclude Include="NSLog.h" />
     <ClInclude Include="NSMenu.h" />
     <ClInclude Include="NSMenuItem.h" />

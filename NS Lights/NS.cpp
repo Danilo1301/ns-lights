@@ -7,7 +7,10 @@
 
 #include "NSMenu.h"
 #include "NSKeys.h"
+
 #include "NSConfig.h"
+#include "NSLangConfig.h"
+
 #include "NSVehicleController.h"
 #include "NSPatterns.h"
 
@@ -44,7 +47,8 @@ void NS::Init()
     //plugin::patch::SetUChar(0x6FFDFD, 0x90);
     //plugin::patch::SetUChar(0x6FFDFE, 0x90);
 
-    NSConfig::Init();
+    NSLangConfig::LoadConfig();
+    NSConfig::LoadConfigs();
 
     for (std::pair<int, int> m : NSConfig::_models)
     {

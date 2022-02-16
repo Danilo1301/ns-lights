@@ -1,5 +1,6 @@
 #include "NSLightData.h"
 
+
 std::map<int, std::list<NSLightData*>> NSLights::ListLights;
 std::list<int> NSLights::ListLights_modelid_used;
 
