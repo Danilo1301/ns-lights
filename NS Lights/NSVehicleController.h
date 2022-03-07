@@ -43,6 +43,9 @@ public:
 
 	bool firstReset = true;
 
+	bool m_bEnabled = false;
+	bool m_bPrevSirenState = false;
+
 	void Draw() {
 
 		if (!NS::m_ShowDebug) return;
@@ -168,15 +171,27 @@ public:
 	{
 		if (!NSLights::LightDataExists(vehicle->m_nModelIndex)) { return; }
 
-		bool visible = true;
+		bool currentSirenState = vehicle->m_nVehicleFlags.bSirenOrAlarm;
 
-		if (!vehicle->m_nVehicleFlags.bSirenOrAlarm) visible = false;
+		if (currentSirenState != m_bPrevSirenState)
+		{
+			m_bPrevSirenState = currentSirenState;
+			m_bEnabled = currentSirenState;
+		}
 
-		if (vehicle->m_nAlarmState != 0 && vehicle->m_nVehicleFlags.bSirenOrAlarm == 0) visible = false;
+		/*
+		m_Enabled = true;
 
-		if (NSMenu::isOpen) visible = true;
+		if (!vehicle->m_nVehicleFlags.bSirenOrAlarm) m_Enabled = false;
 
-		if (!visible) return;
+		if (vehicle->m_nAlarmState != 0 && vehicle->m_nVehicleFlags.bSirenOrAlarm == 0) m_Enabled = false;
+
+		if (m_Enabled) m_Enabled = true;
+
+		if (NSMenu::isOpen) m_Enabled = true;
+		*/
+
+		if (!m_bEnabled && !NSMenu::isOpen) return;
 
 		UpdatePatterns();
 

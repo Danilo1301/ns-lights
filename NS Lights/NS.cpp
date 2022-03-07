@@ -14,6 +14,8 @@
 #include "NSVehicleController.h"
 #include "NSPatterns.h"
 
+int lastToggledLights = 0;
+
 bool NS::m_ShowDebug = false;
 
 using namespace plugin;
@@ -97,12 +99,28 @@ void NS::Init()
 }
 
 void NS::Update() {
+    CVehicle* vehicle = FindPlayerVehicle(0, false);
+
+    if (vehicle)
+    {
+        if (KeyPressed(VK_LCONTROL) && KeyPressed(74) && CTimer::m_snTimeInMilliseconds - lastToggledLights > 300)
+        {
+            lastToggledLights = CTimer::m_snTimeInMilliseconds;
+
+            NSVehicleController* vehicleController = NSVehicles::GetVehicleController(vehicle);
+            vehicleController->m_bEnabled = !vehicleController->m_bEnabled;
+            
+        }
+    }
+
+
     NSVehicles::CheckVehicles();
     NSKeys::Update();
 }
 
 void NS::UpdateVehicleControllers(CVehicle* vehicle) {
     NSVehicleController* vehicleController = NSVehicles::GetVehicleController(vehicle);
+
     vehicleController->Update();
 }
 
