@@ -8,7 +8,8 @@
 2. Drag and drop the **modloader** folder to your GTA folder
 
 ## How to use
-Press CTRL + L inside a vehicle
+Press CTRL + L inside a vehicle to open the menu
+Press CTRL + J to enable/disable lights only
 
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
@@ -27,4 +28,5 @@ Press CTRL + L inside a vehicle
 2. Arraste a pasta **modloader** para a pasta raíz do seu GTA
 
 ## Como usar
-Aperte CTRL + L dentro de um veículo
+Aperte CTRL + L dentro de um veículo para abrir o menu
+Aperte CTRL + J para ativar/desativar somente as luzes
