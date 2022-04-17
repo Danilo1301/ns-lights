@@ -167,6 +167,26 @@ public:
 		}
 	}
 
+	void RegisterCoronas() {
+		if (!m_bEnabled && !NSMenu::isOpen) return;
+
+		int lightsn = NSLights::GetNumberOfLightsOfVehicle(vehicle->m_nModelIndex) - 1;
+
+		unsigned int light_id = reinterpret_cast<unsigned int>(vehicle) + 10;
+
+		for (int i = 0; i <= lightsn; i++)
+		{
+			NSVechiclePatternController* patternController = GetPatternController(i);
+			NSLightData* lightData = NSLights::GetLightData(vehicle->m_nModelIndex, i);
+
+			bool freeze = NSMenu::SETTINGS_FREEZE_LIGHTS && NSMenu::isOpen;
+
+			lightData->RegisterOnVehicle(vehicle, light_id, patternController->leftActive, patternController->middleActive, patternController->rightActive, freeze);
+
+			light_id += lightData->amount_of_lights * 2;
+		}
+	}
+
 	void Update()
 	{
 		if (!NSLights::LightDataExists(vehicle->m_nModelIndex)) { return; }
@@ -194,22 +214,6 @@ public:
 		if (!m_bEnabled && !NSMenu::isOpen) return;
 
 		UpdatePatterns();
-
-		int lightsn = NSLights::GetNumberOfLightsOfVehicle(vehicle->m_nModelIndex) - 1;
-
-		unsigned int light_id = reinterpret_cast<unsigned int>(vehicle) + 10;
-
-		for (int i = 0; i <= lightsn; i++)
-		{
-			NSVechiclePatternController* patternController = GetPatternController(i);
-			NSLightData* lightData = NSLights::GetLightData(vehicle->m_nModelIndex, i);
-
-			bool freeze = NSMenu::SETTINGS_FREEZE_LIGHTS && NSMenu::isOpen;
-
-			lightData->RegisterOnVehicle(vehicle, light_id, patternController->leftActive, patternController->middleActive, patternController->rightActive, freeze);
-
-			light_id += lightData->amount_of_lights*2;
-		}
 	}
 };
 

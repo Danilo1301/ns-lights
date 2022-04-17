@@ -1,12 +1,20 @@
 #pragma once
 
+
 #include "plugin.h"
 
-#include "CCoronas.h"
 #include "CMessages.h"
-#include "CCamera.h"
+#include "CFont.h"
+#include "CSprite.h"
+#include "CCoronas.h"
+#include "CGeneral.h"
+
+#include "extensions/ScriptCommands.h"
 
 #include "map"
+
+#include "CCamera.h"
+
 
 class NSLightData {
 public:
@@ -39,6 +47,8 @@ public:
 
 	float near_clip = 0.3f;
 	int initial_pattern = 0;
+
+	int reflect = 0;
 
 	NSLightData(int vehicle_modelid) {
 		this->vehicle_modelid = vehicle_modelid;
@@ -117,6 +127,13 @@ public:
 				CCoronas::RegisterCorona(light_id, vehicle, (unsigned char)(useSec ? secondary_red : red), (unsigned char)(useSec ? secondary_green : green), (unsigned char)(useSec ? secondary_blue : blue), (unsigned char)big_light_alpha, posn, fl_radius, 400.0f, eCoronaType::CORONATYPE_SHINYSTAR, eCoronaFlareType::FLARETYPE_NONE, false, false, 0, 0.0f, false, 1.5f, 0, 100.0f, false, false);
 				light_id++;
 			}
+
+			if (radius > 0 && reflect) {
+				CVector fposition = vehicle->TransformFromObjectSpace(posn);
+				plugin::Command< 0x09E5 >(fposition.x, fposition.y, fposition.z, (useSec ? secondary_red : red), (useSec ? secondary_green : green), (useSec ? secondary_blue : blue), 30.0f);
+
+			}
+
 		}
 
 

@@ -53,6 +53,16 @@ NSConfigItem* NSConfig::GetConfigForModel(int modelid, int lightn, char* key)
 {
 	char str[256];
 	sprintf(str, "%i_%i_%s", modelid, lightn, key);
+
+	if (ConfigItems.find(str) == ConfigItems.end()) {
+		NSConfigItem* cfgItem = new NSConfigItem(str);
+		cfgItem->val_float = 0.0f;
+		cfgItem->val_int = 0;
+		cfgItem->val_uchar = (unsigned char)0;
+
+		ConfigItems.insert(std::pair<char*, NSConfigItem*>(str, cfgItem));
+	}
+
 	return ConfigItems.at(std::string(str));
 }
 
@@ -110,6 +120,8 @@ void NSConfig::SaveConfig()
 				WriteToConfigFile(out_cfg, "BIG_LIGHT_ALPHA", modelid, i, data->big_light_alpha);
 				WriteToConfigFile(out_cfg, "NEAR_CLIP", modelid, i, data->near_clip);
 				WriteToConfigFile(out_cfg, "INITIAL_PATTERN", modelid, i, data->initial_pattern);
+				WriteToConfigFile(out_cfg, "REFLECT", modelid, i, data->reflect);
+
 			}
 		}
 	}

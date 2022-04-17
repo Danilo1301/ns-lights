@@ -22,32 +22,83 @@ using namespace plugin;
 
 void NS::Init()
 {
-    //plugin::patch::SetUInt(0x70026C, 0x90909090);
-    //plugin::patch::SetUChar(0x700270, 0x90);
-    //plugin::patch::SetUChar(0x700271, 0x90);
-    //plugin::patch::SetUInt(0x700261, 0x90909090);
-    //plugin::patch::SetUChar(0x700265, 0x90);
-    //plugin::patch::SetUChar(0x700266, 0x90);
-    //plugin::patch::SetUInt(0x700257, 0x90909090);
-    //plugin::patch::SetUChar(0x70025B, 0x90);
-    //plugin::patch::SetUChar(0x70025C, 0x90);
+    //https://gtaforums.com/topic/757430-block-siren-lights-memory-address-for-it/
 
-    //0@ = 0xC3F12C //CPointLight => RGB
-    //int pointLight = 0xC3F12C;
-    //plugin::patch::SetUInt(pointLight, 0);
-    //pointLight += 4;
-    //plugin::patch::SetUInt(pointLight, 0);
-    //pointLight += 4;
-    //plugin::patch::SetUInt(pointLight, 0);
+     //0A8C: write_memory 0x70026C size 4 value 0x90909090 virtual_protect 0
+     //plugin::patch::SetUInt(0x70026C, 0x90909090);
 
-    //NOPs the function that draws the coronnas
-    //plugin::patch::SetUInt(0x6ABA60, 0x90909090);
-    //plugin::patch::SetUChar(0x6ABA64, 0x90);
+     //0A8C : write_memory 0x700270 size 1 value 0x90 virtual_protect 0
+     //plugin::patch::SetUChar(0x700270, 0x90);
+
+     //0A8C : write_memory 0x700271 size 1 value 0x90 virtual_protect 0
+     //plugin::patch::SetUChar(0x700271, 0x90);
+
+     //0A8C : write_memory 0x700261 size 4 value 0x90909090 virtual_protect 0
+     //plugin::patch::SetUInt(0x700261, 0x90909090);
+
+     //0A8C : write_memory 0x700265 size 1 value 0x90 virtual_protect 0
+     //plugin::patch::SetUChar(0x700265, 0x90);
+
+     //0A8C : write_memory 0x700266 size 1 value 0x90 virtual_protect 0
+     //plugin::patch::SetUChar(0x700266, 0x90);
+
+     //0A8C : write_memory 0x700257 size 4 value 0x90909090 virtual_protect 0
+     //plugin::patch::SetUInt(0x700257, 0x90909090);
+
+     //0A8C : write_memory 0x70025B size 1 value 0x90 virtual_protect 0
+     //plugin::patch::SetUChar(0x70025B, 0x90);
+
+     //0A8C : write_memory 0x70025C size 1 value 0x90 virtual_protect 0
+     //plugin::patch::SetUChar(0x70025C, 0x90);
+
+     //--
+
+     //0@ = 0xC3F12C //CPointLight => RGB
+     //int pointLight = 0xC3F12C;
+
+     //0A8C: write_memory 0@ size 4 value 0.0 virtual_protect 0 // R
+     //plugin::patch::SetUInt(pointLight, 0);
+
+     //0@ += 4
+     //pointLight += 4;
+
+     //0A8C: write_memory 0@ size 4 value 0.0 virtual_protect 0  // G
+     //plugin::patch::SetUInt(pointLight, 0);
+
+     //0@ += 4
+     //pointLight += 4;
+
+     //0A8C: write_memory 2@ size 4 value 0.0 virtual_protect 0 
+     //plugin::patch::SetUInt(pointLight, 0);
+
+     //--
+
+     //NOPs the function that draws the coronnas
+     //0A8C: write_memory 0x6ABA60 size 4 value 0x90909090 virtual_protect 0
+    plugin::patch::SetUInt(0x6ABA60, 0x90909090);
+
+    //0A8C: write_memory 0x6ABA64 size 1 value 0x90 virtual_protect 0
+    plugin::patch::SetUChar(0x6ABA64, 0x90);
+
+    //--
 
     //NOPs the function that checks wether the siren was activated or not
+    //0A8C: write_memory 0x6FFDFC size 1 value 0x90 virtual_protect 0
     //plugin::patch::SetUChar(0x6FFDFC, 0x90);
+
+    //0A8C: write_memory 0x6FFDFD size 1 value 0x90 virtual_protect 0
     //plugin::patch::SetUChar(0x6FFDFD, 0x90);
+
+    //0A8C: write_memory 0x6FFDFE size 1 value 0x90 virtual_protect 0
     //plugin::patch::SetUChar(0x6FFDFE, 0x90);
+
+    //--
+
+    //not using
+    //NOPs the function that activates the shadow drawing under the vehicle
+    //0A8C: write_memory 0x70802D size 4 value 0x90909090 virtual_protect 0
+    plugin::patch::SetUInt(0x70802D, 0x90909090);
+
 
     NSLangConfig::LoadConfig();
     NSConfig::LoadConfigs();
@@ -83,6 +134,7 @@ void NS::Init()
             lightData->big_light_alpha = NSConfig::GetConfigForModel(modelid, i, "BIG_LIGHT_ALPHA")->val_int;
             lightData->near_clip = NSConfig::GetConfigForModel(modelid, i, "NEAR_CLIP")->val_float;
             lightData->initial_pattern = NSConfig::GetConfigForModel(modelid, i, "INITIAL_PATTERN")->val_int;
+            lightData->reflect = NSConfig::GetConfigForModel(modelid, i, "REFLECT")->val_int;
         }
     }
 
@@ -103,14 +155,16 @@ void NS::Update() {
 
     if (vehicle)
     {
+        NSVehicleController* vehicleController = NSVehicles::GetVehicleController(vehicle);
+
         if (KeyPressed(VK_LCONTROL) && KeyPressed(74) && CTimer::m_snTimeInMilliseconds - lastToggledLights > 300)
         {
             lastToggledLights = CTimer::m_snTimeInMilliseconds;
 
-            NSVehicleController* vehicleController = NSVehicles::GetVehicleController(vehicle);
             vehicleController->m_bEnabled = !vehicleController->m_bEnabled;
-            
         }
+
+        vehicleController->RegisterCoronas();
     }
 
 

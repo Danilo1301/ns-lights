@@ -327,6 +327,10 @@ void NSMenu::ShowMenuEditingLight()
 	item3->AddOption(1, NSLangConfig::FormatLine("light_pattern_option", "%s %i", 2));
 	item3->AddOption(2, NSLangConfig::FormatLine("light_pattern_option", "%s %i", 3));
 
+	NSMenuItem* itemReflect = CreateMenuItemOption(NSLangConfig::GetLine("reflect_lights"), 100.0f, lightData->reflect);
+	itemReflect->AddOption(0, NSLangConfig::GetLine("no"));
+	itemReflect->AddOption(1, NSLangConfig::GetLine("yes"));
+
 	CreateMenuItemButton(NSLangConfig::GetLine("remove_light"), NSMenu::ShowMenuConfirmRemoveLight);
 	CreateMenuItemButton(NSLangConfig::GetLine("back"), NSMenu::ShowMenuPrincipal);
 }
