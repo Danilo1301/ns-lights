@@ -17,7 +17,7 @@ CRGBA NSMenu::color_title = CRGBA(11, 54, 97, 255);
 std::list<NSMenuItem*> ListMenuItems;
 
 int menu_selection_index = 0;
-int MAX_LIGHTS_PER_VEHICLE = 5;
+int MAX_LIGHTS_PER_VEHICLE = 99999;
 
 void NSMenu::ToggleMenu()
 {
