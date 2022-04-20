@@ -103,6 +103,7 @@
     <ClCompile Include="NSMenuItem.cpp" />
     <ClCompile Include="NSPatterns.cpp" />
     <ClCompile Include="NSVehicleController.cpp" />
+    <ClCompile Include="TestHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="eMenuItemType.h" />
@@ -118,6 +119,7 @@
     <ClInclude Include="NSMenuItem.h" />
     <ClInclude Include="NSPatterns.h" />
     <ClInclude Include="NSVehicleController.h" />
+    <ClInclude Include="TestHelper.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

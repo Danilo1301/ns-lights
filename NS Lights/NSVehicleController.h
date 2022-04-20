@@ -47,8 +47,21 @@ public:
 	bool m_bPrevSirenState = false;
 
 	void Draw() {
-
 		if (!NS::m_ShowDebug) return;
+
+		//
+
+		int lightsn = NSLights::GetNumberOfLightsOfVehicle(vehicle->m_nModelIndex) - 1;
+		unsigned int light_id = reinterpret_cast<unsigned int>(vehicle) + 10;
+
+		for (int i = 0; i <= lightsn; i++)
+		{
+			NSLightData* lightData = NSLights::GetLightData(vehicle->m_nModelIndex, i);
+			lightData->DrawTestAngle(vehicle, light_id);
+			light_id += lightData->amount_of_lights * 2;
+		}
+
+		//
 
 		auto alarmState = vehicle->m_nAlarmState;
 		auto sirenAlarmFlag = vehicle->m_nVehicleFlags.bSirenOrAlarm;

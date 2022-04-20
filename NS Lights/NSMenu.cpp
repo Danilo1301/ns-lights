@@ -236,7 +236,7 @@ void NSMenu::ShowMenuPrincipal() {
 	NSMenu::SetMenuTitle(NSLangConfig::GetLine("configure_lights"));
 
 	char text[256];
-	sprintf(text, NSLangConfig::GetLine("edit_vehicle"), onVehicleId, NSLights::GetNumberOfLightsOfVehicle(onVehicleId), MAX_LIGHTS_PER_VEHICLE);
+	sprintf(text, NSLangConfig::GetLine("edit_vehicle"), onVehicleId, NSLights::GetNumberOfLightsOfVehicle(onVehicleId));
 	CreateMenuItemLabel(text);
 
 	if (NSLights::LightDataExists(onVehicleId))
@@ -298,14 +298,15 @@ void NSMenu::ShowMenuEditingLight()
 	item0->AddOption(1, NSLangConfig::GetLine("yes"));
 
 	NSMenuItem* item1 = CreateMenuItemOption(NSLangConfig::GetLine("light_amount"), 100.0f, lightData->amount_of_lights);
-	item1->AddOption(1, "1");
-	item1->AddOption(2, "2");
-	item1->AddOption(3, "3");
-	item1->AddOption(4, "4");
+	for (int i = 0; i < 20; i++)
+	{
+		item1->AddOption(i, std::to_string(i));
+	}
 
 	NSMenuItem* item2 = CreateMenuItemOption(NSLangConfig::GetLine("light_direction"), 100.0f, lightData->direction);
-	item2->AddOption(0, NSLangConfig::GetLine("light_direction_front_back"));
+	item2->AddOption(0, NSLangConfig::GetLine("light_direction_front"));
 	item2->AddOption(1, NSLangConfig::GetLine("light_direction_all"));
+	item2->AddOption(2, NSLangConfig::GetLine("light_direction_back"));
 
 	CreateMenuItemFloat(NSLangConfig::GetLine("light_size"), 100.0f, 0.0f, 2.0f, lightData->size);
 	CreateMenuItemButton(NSLangConfig::GetLine("light_position"), NSMenu::ShowMenuChangePosition);

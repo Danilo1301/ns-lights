@@ -45,10 +45,10 @@ public:
 		store_to_value = GetCurrentOptionInt();
 	}
 
-	void AddOption(int value, const char* text)
+	void AddOption(int value, std::string text)
 	{
-		std::string option_display(text);
-		Options.push_back(std::pair<int, std::string>(value, option_display));
+		//std::string option_display(text);
+		Options.push_back(std::pair<int, std::string>(value, text));
 
 		SetOptionByValue(store_to_value);
 	}
@@ -165,7 +165,7 @@ public:
 		optionValueBinder = new OptionValueBinder(store_to);
 	}
 
-	void AddOption(int val, const char* text) {
+	void AddOption(int val, std::string text) {
 		optionValueBinder->AddOption(val, text);
 	}
 

@@ -61,6 +61,76 @@ public:
 		return acos((pow(v12, 2) + pow(v13, 2) - pow(v23, 2)) / (2 * v12 * v13));
 	}
 
+	float GetLightRadiusMultiplier(float dir, float posY) {
+		float start_fadeout = 1.0f;
+		float fadeout_offset = 0.6f;
+
+		int atDirection = posY > 0 ? 0 : 2;
+
+		if (atDirection != direction) {
+			start_fadeout += fadeout_offset;
+			fadeout_offset *= -1;
+		}
+
+		return GetDirRadiusMultiplier(dir, start_fadeout, fadeout_offset);
+	}
+
+	void DrawTestAngle(CVehicle* vehicle, unsigned int id) {
+		int light_id = id;
+
+		for (int i = 0; i < amount_of_lights; i++)
+		{
+			CVector posn = CVector(0, pos_y, pos_z);
+			posn.x = pos_x - (amount_of_lights - 1) * light_distance / 2 + (i)*light_distance;
+
+			float dir = NSGetAngleBetweenVectors(vehicle->TransformFromObjectSpace(CVector(posn.x, 0, posn.z)), vehicle->TransformFromObjectSpace(posn), TheCamera.GetPosition());
+			if (isnan(dir)) {
+				dir = 0.0001f;
+			}
+
+			float distY = vehicle->GetPosition().y - vehicle->TransformFromObjectSpace(posn).y;
+			float radius = 1;
+
+			if (direction != 1) {
+				radius = GetLightRadiusMultiplier(dir, posn.y);
+			}
+
+			int atDirection = posn.y > 0 ? 0 : 2;
+
+			CVector& drawposn = vehicle->TransformFromObjectSpace(posn);
+			RwV3d rwp = { drawposn.x, drawposn.y, drawposn.z };
+			RwV3d screenCoors; float w, h;
+			if (CSprite::CalcScreenCoors(rwp, &screenCoors, &w, &h, true, true)) {
+				CFont::SetOrientation(ALIGN_CENTER);
+				CFont::SetColor(CRGBA(0, 255, 0, 255));
+				CFont::SetDropShadowPosition(1);
+				CFont::SetBackground(false, false);
+				CFont::SetWrapx(500.0);
+				CFont::SetScale(0.5 * 0.5, 1.0 * 0.5);
+				CFont::SetFontStyle(FONT_SUBTITLES);
+				CFont::SetProportional(true);
+				char text[256];
+				sprintf(text, "%.3f - %.1f (%d) (%d)", dir, radius, direction, atDirection);
+				CFont::PrintString(screenCoors.x, screenCoors.y, text);
+			}
+		}
+	}
+
+	float GetDirRadiusMultiplier(float currentDir, float startFadeDir, float offsetFadeDir) {
+		float end = startFadeDir + offsetFadeDir;
+
+		if (offsetFadeDir < 0) {
+			if (currentDir < startFadeDir + offsetFadeDir) currentDir = startFadeDir + offsetFadeDir;
+			if (currentDir > startFadeDir) currentDir = startFadeDir;
+		}
+		else {
+			if (currentDir < startFadeDir) currentDir = startFadeDir;
+			if (currentDir > startFadeDir + offsetFadeDir) currentDir = startFadeDir + offsetFadeDir;
+		}
+
+		return abs((currentDir - end) / offsetFadeDir);
+	}
+
 	void RegisterOnVehicle(CVehicle* vehicle, unsigned int id, bool left, bool middle, bool right, bool freeze) {
 		int light_id = id;
 
@@ -84,35 +154,22 @@ public:
 			posn.x = pos_x - (amount_of_lights - 1) * light_distance / 2 + (i)*light_distance;
 
 		
-			float dir = NSGetAngleBetweenVectors(vehicle->GetPosition(), vehicle->TransformFromObjectSpace(posn), TheCamera.GetPosition());
+			float dir = NSGetAngleBetweenVectors(vehicle->TransformFromObjectSpace(CVector(posn.x, 0, posn.z)), vehicle->TransformFromObjectSpace(posn), TheCamera.GetPosition());
 			if (isnan(dir)) {
-				dir = 0.01f;
-			}
-			const float start_fadeout = 1.0f;
-			const float end_fadeout = 1.6f;
-
-			if ((pos_y >= 0.1f || pos_y <= -0.1f) && direction != 1) {
-				if (dir >= start_fadeout && dir <= end_fadeout) {
-					float r = (dir - start_fadeout) / (end_fadeout - start_fadeout);
-
-					radius *= (1.0f - r);
-					fl_radius *= (1.0f - r);
-				}
-
-				if (dir >= end_fadeout && direction == 1) {
-					showLight = false;
-				}
-
-				if (direction == 0 && dir >= end_fadeout) {
-					showLight = false;
-				}
+				dir = 0.0001f;
 			}
 
-			
+			float distY = vehicle->GetPosition().y - vehicle->TransformFromObjectSpace(posn).y;
 
-			if (!showLight & !freeze) {
-				radius = 0.0f;
-				fl_radius = 0.0f;
+			if (direction != 1) {
+				radius *= GetLightRadiusMultiplier(dir, posn.y);
+			}
+
+			if (!showLight) {
+				if (!freeze) {
+					radius = 0.0f;
+					fl_radius = 0.0f;
+				}
 			}
 
 			bool useSec = (secondary_enabled && isRightSide);
